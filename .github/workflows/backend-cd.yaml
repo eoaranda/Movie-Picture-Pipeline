@@ -103,7 +103,7 @@ jobs:
               id: login-ecr # This is used to reference this step later
               uses: aws-actions/amazon-ecr-login@v2    
 
-            # Create ECR Repository if not exists
+            # Create ECR Repository if not exists programmatically instead of manually doing it in the AWS console
             - name: Create ECR Repository if not exists
               run: |
                 aws ecr describe-repositories --repository-names ${{ env.REPOSITORY }} --region ${{ vars.AWS_REGION }} || \

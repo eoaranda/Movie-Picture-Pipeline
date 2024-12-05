@@ -110,7 +110,7 @@ jobs:
               id: login-ecr # This is used to reference this step later
               uses: aws-actions/amazon-ecr-login@v2
 
-            # Create ECR Repository if not exists
+            # Create ECR Repository if not exists programmatically instead of manually doing it in the AWS console
             - name: Create ECR Repository if not exists
               run: |
                 aws ecr describe-repositories --repository-names ${{ env.REPOSITORY }} --region ${{ vars.AWS_REGION }} || \
@@ -129,6 +129,26 @@ jobs:
               run: |
                 docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t $REGISTRY/${{ env.REPOSITORY }}:$IMAGE_TAG .
                 docker push $REGISTRY/${{ env.REPOSITORY }}:$IMAGE_TAG
+
+            # Create EKS Cluster if not exists
+            - name: Ensure EKS Cluster Exists
+              run: |
+                CLUSTER_NAME="${{ env.EKS_CLUSTER }}"  
+                REGION="${{ vars.AWS_REGION }}"
+                
+                if ! aws eks describe-cluster --name $CLUSTER_NAME --region $REGION > /dev/null 2>&1; then
+                echo "Cluster $CLUSTER_NAME not found. Creating it..."
+                aws eks create-cluster \
+                    --name $CLUSTER_NAME \
+                    --region $REGION \
+                    --role-arn <YOUR_ROLE_ARN> \
+                    --resources-vpc-config subnetIds=<YOUR_SUBNET_IDS>,securityGroupIds=<YOUR_SECURITY_GROUP_IDS>
+                
+                echo "Cluster creation initiated. Waiting for it to become active..."
+                aws eks wait cluster-active --name $CLUSTER_NAME --region $REGION
+                else
+                echo "Cluster $CLUSTER_NAME already exists."
+                fi
 
             # Configure Kubeconfig
             - name: Configure Kubeconfig
