@@ -23,7 +23,7 @@ env:
   # Define the API URL 
   REACT_APP_MOVIE_API_URL: http://localhost:5000
   # Define the cluster name 
-  EKS_CLUSTER: 'mp-eks-cluster'
+  EKS_CLUSTER: 'mp-eks-cluster' #this has been previously created in the AWS console
   # Define the repository name
   REPOSITORY: 'mp-frontend'
 
@@ -129,26 +129,6 @@ jobs:
               run: |
                 docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t $REGISTRY/${{ env.REPOSITORY }}:$IMAGE_TAG .
                 docker push $REGISTRY/${{ env.REPOSITORY }}:$IMAGE_TAG
-
-            # Create EKS Cluster if not exists
-            - name: Ensure EKS Cluster Exists
-              run: |
-                CLUSTER_NAME="${{ env.EKS_CLUSTER }}"  
-                REGION="${{ vars.AWS_REGION }}"
-                
-                if ! aws eks describe-cluster --name $CLUSTER_NAME --region $REGION > /dev/null 2>&1; then
-                echo "Cluster $CLUSTER_NAME not found. Creating it..."
-                aws eks create-cluster \
-                    --name $CLUSTER_NAME \
-                    --region $REGION \
-                    --role-arn <YOUR_ROLE_ARN> \
-                    --resources-vpc-config subnetIds=<YOUR_SUBNET_IDS>,securityGroupIds=<YOUR_SECURITY_GROUP_IDS>
-                
-                echo "Cluster creation initiated. Waiting for it to become active..."
-                aws eks wait cluster-active --name $CLUSTER_NAME --region $REGION
-                else
-                echo "Cluster $CLUSTER_NAME already exists."
-                fi
 
             # Configure Kubeconfig
             - name: Configure Kubeconfig
