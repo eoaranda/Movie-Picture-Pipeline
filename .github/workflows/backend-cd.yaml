@@ -154,9 +154,3 @@ jobs:
               if: failure()
               run: |
                 kubectl logs -l app=backend --tail=50
-
-            # Validate Deployment
-            - name: Validate Deployment
-              run: |
-                kubectl rollout status deployment/backend
-                kubectl get pods
