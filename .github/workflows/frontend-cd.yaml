@@ -31,7 +31,7 @@ env:
 jobs:
     # First task to run in the workflow
     linting_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
     
     # Second task to run in the workflow
     test_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -89,7 +89,7 @@ jobs:
 
     # Third task to run in the workflow
     build_and_deploy_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         # This task depends on the linting_stage and test_stage tasks
         needs: [linting_stage, test_stage] 
         steps:
