@@ -110,6 +110,12 @@ jobs:
               id: login-ecr # This is used to reference this step later
               uses: aws-actions/amazon-ecr-login@v2
 
+            # Create ECR Repository if not exists
+            - name: Create ECR Repository if not exists
+              run: |
+                aws ecr describe-repositories --repository-names ${{ env.REPOSITORY }} --region ${{ vars.AWS_REGION }} || \
+                aws ecr create-repository --repository-name ${{ env.REPOSITORY }} --region ${{ vars.AWS_REGION }}
+
             # Set up Docker
             - name: Set up Docker
               run: docker --version

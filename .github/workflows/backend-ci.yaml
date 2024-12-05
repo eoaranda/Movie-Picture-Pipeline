@@ -24,7 +24,7 @@ jobs:
 
     # First task to run in the workflow
     linting_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: Check the Repository
@@ -49,7 +49,7 @@ jobs:
               run: pipenv run lint # according to dev notes
         
     test_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: Check the Repository
@@ -75,7 +75,7 @@ jobs:
 
     build_stage:
         needs: [linting_stage, test_stage]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: Check the Repository

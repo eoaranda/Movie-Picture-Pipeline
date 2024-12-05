@@ -29,7 +29,7 @@ env:
 jobs:
   # First task to run in the workflow
     linting_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: Check the Repository
@@ -54,7 +54,7 @@ jobs:
               run: pipenv run lint # according to dev notes
         
     test_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: Check the Repository
@@ -81,7 +81,7 @@ jobs:
 
     # Third task to run in the workflow
     build_and_deploy_stage:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         # This task depends on the linting_stage and test_stage tasks
         needs: [linting_stage, test_stage] 
         
@@ -102,6 +102,12 @@ jobs:
             - name: Login to Amazon ECR
               id: login-ecr # This is used to reference this step later
               uses: aws-actions/amazon-ecr-login@v2    
+
+            # Create ECR Repository if not exists
+            - name: Create ECR Repository if not exists
+              run: |
+                aws ecr describe-repositories --repository-names ${{ env.REPOSITORY }} --region ${{ vars.AWS_REGION }} || \
+                aws ecr create-repository --repository-name ${{ env.REPOSITORY }} --region ${{ vars.AWS_REGION }}
             
             # Set up Docker
             - name: Set up Docker
