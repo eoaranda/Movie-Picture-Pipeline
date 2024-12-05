@@ -96,8 +96,29 @@ jobs:
             - name: Set up Docker
               run: docker --version
             
+            - name: Set up Node.js 
+              uses: actions/setup-node@v4
+              with:
+                node-version: ${{env.NODE_VERSION}}
+                cache: 'npm' # Caches the node_modules folder to speed up the workflow
+                cache-dependency-path: ${{ env.PROJECT_DIR }}/package-lock.json
+
+            # Log the Node.js version
+            - name: Log Node.js Version
+              run: |
+               echo "Using Node.js version: ${{ env.NODE_VERSION }}"
+
+            #Obtained from the Frontend Development Notes
+            - name: Install dependencies
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: npm ci
+
+            #Obtained from the Frontend Development Notes
+            - name: Run tests
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: npm test
+
             # This was obtained from the Frontend Development Notes but the
-            # directions in the Project Rubric are wrong as they just point to the steps of the test_stage
             - name: Build Docker Frontend Image
               working-directory: ${{ env.PROJECT_DIR }}
               run: |

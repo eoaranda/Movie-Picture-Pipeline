@@ -151,6 +151,11 @@ jobs:
                 kustomize edit set image backend=$REGISTRY/${{ env.REPOSITORY }}:$IMAGE_TAG
                 kustomize build | kubectl apply -f -
             
+            # Print the Applications URLS
+            - name: Print Application URLs
+              run: |
+                kubectl get svc -A
+            
             # Fetch Logs on Failure
             - name: Fetch Logs on Failure
               if: failure()

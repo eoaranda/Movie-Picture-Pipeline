@@ -21,7 +21,7 @@ env:
   # Define frontend path 
   PROJECT_DIR: 'starter/frontend' 
   # Define the API URL 
-  REACT_APP_MOVIE_API_URL: http://localhost:5000
+  REACT_APP_MOVIE_API_URL: http://backend:80
   # Define the cluster name 
   EKS_CLUSTER: 'mp-eks-cluster' #this has been previously created in the AWS console
   # Define the repository name
@@ -154,6 +154,11 @@ jobs:
                 kustomize edit set image frontend=$REGISTRY/${{ env.REPOSITORY }}:$IMAGE_TAG
                 kustomize build | kubectl apply -f -
             
+            # Print the Applications URLS
+            - name: Print Application URLs
+              run: |
+                kubectl get svc -A
+
             # Fetch Logs on Failure
             - name: Fetch Logs on Failure
               if: failure()
