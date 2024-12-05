@@ -11,6 +11,16 @@ You'll find 2 folders, one named `frontend` and one named `backend`, where each 
 
 ## Deliverables
 
+### Status of the CI/CD Pipeline:
+
+[![Backend Continuous Integration](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/backend-ci.yaml/badge.svg)](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/backend-ci.yaml)
+
+[![Backend Continuous Delivery](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/backend-cd.yaml/badge.svg)](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/backend-cd.yaml)
+
+[![Frontend Continuous Integration](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/frontend-ci.yaml/badge.svg)](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/frontend-ci.yaml)
+
+[![Frontend Continuous Delivery](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/frontend-cd.yaml/badge.svg)](https://github.com/eoaranda/Movie-Picture-Pipeline/actions/workflows/frontend-cd.yaml)
+
 ### Frontend
 
 1. A Continuous Integration workflow that:
