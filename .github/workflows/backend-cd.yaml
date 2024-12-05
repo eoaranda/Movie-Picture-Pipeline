@@ -158,5 +158,5 @@ jobs:
             # Validate Deployment
             - name: Validate Deployment
               run: |
-                kubectl rollout status deployment/backend-deployment
+                kubectl rollout status deployment/backend
                 kubectl get pods
