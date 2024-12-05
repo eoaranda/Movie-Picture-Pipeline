@@ -1,0 +1,102 @@
+# This file contains the configuration for the frontend continuous integration workflow
+name: Frontend Continuous Integration
+# For Continuous Integration we will focus on linting, testing and building the frontend application
+
+# Triggers for the workflow
+on:
+    # Manual trigger using the workflow_dispatch event
+    workflow_dispatch:
+    
+    # Automatic trigger on pull request events targeting the main branch
+    pull_request:
+        branches:
+            - main
+        # Trigger only when changes occur in this directory and this not triggered for the frontend
+        paths:
+            - 'starter/frontend/**' 
+
+env:
+  # Set Node.js Version
+  NODE_VERSION: '18.x'
+  # Define frontend path 
+  PROJECT_DIR: 'starter/frontend' 
+  # Define the API URL 
+  REACT_APP_MOVIE_API_URL: http://localhost:5000
+
+# Jobs defined in the workflow            
+jobs:
+    # First task to run in the workflow
+    linting_stage:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js 
+              uses: actions/setup-node@v4
+              with:
+                node-version: ${{env.NODE_VERSION}}
+                cache: 'npm' # Caches the node_modules folder to speed up the workflow
+
+            # Log the Node.js version
+            - name: Log Node.js Version
+              run: |
+               echo "Using Node.js version: ${{ env.NODE_VERSION }}"
+
+            #Obtained from the Frontend Development Notes
+            - name: Install dependencies
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: npm ci
+
+            #Obtained from the Frontend Development Notes
+            - name: Lint code
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: npm run lint
+    
+    # Second task to run in the workflow
+    test_stage:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js 
+              uses: actions/setup-node@v4
+              with:
+                node-version: ${{env.NODE_VERSION}}
+                cache: 'npm' # Caches the node_modules folder to speed up the workflow
+
+            # Log the Node.js version
+            - name: Log Node.js Version
+              run: |
+               echo "Using Node.js version: ${{ env.NODE_VERSION }}"
+
+            #Obtained from the Frontend Development Notes
+            - name: Install dependencies
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: npm ci
+
+            #Obtained from the Frontend Development Notes
+            - name: Run tests
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: npm test
+
+    # Third task to run in the workflow
+    build_stage:
+        runs-on: ubuntu-latest
+        # This task depends on the linting_stage and test_stage tasks
+        needs: [linting_stage, test_stage] 
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Set up Docker
+            - name: Set up Docker
+              run: docker --version
+            
+            # This was obtained from the Frontend Development Notes but the
+            # directions in the Project Rubric are wrong as they just point to the steps of the test_stage
+            - name: Build Docker Frontend Image
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: |
+                docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} --tag mp-frontend:latest .

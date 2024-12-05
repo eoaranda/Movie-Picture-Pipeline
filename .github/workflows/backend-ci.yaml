@@ -1,0 +1,87 @@
+# This file contains the configuration for the backend continuous integration workflow
+name: Backend Continuous Integration
+# For Continuous Integration we will focus on linting, testing and building the backend application
+
+# Triggers for the workflow
+on:
+    # Manual trigger using the workflow_dispatch event
+    workflow_dispatch:
+    
+    # Automatic trigger on pull request events targeting the main branch
+    pull_request:
+        branches:
+            - main
+        # Trigger only when changes occur in this directory and this not triggered for the backend
+        paths:
+            - 'starter/backend/**' 
+
+env:
+  # Define backend path 
+  PROJECT_DIR: 'starter/backend' 
+
+# Jobs defined in the workflow            
+jobs:
+
+    # First task to run in the workflow
+    linting_stage:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check the Repository
+              uses: actions/checkout@v4
+
+            # setup python
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+                cache: 'pip' # Caches the pip packages to speed up the workflow
+
+            - name: Install Dependencies
+              working-directory: ${{ env.PROJECT_DIR }}
+              run:  |
+                python -m pip install --upgrade pip
+                pip install pipenv
+                pipenv install --dev
+
+            - name: Run Lint
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: pipenv run lint # according to dev notes
+        
+    test_stage:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check the Repository
+              uses: actions/checkout@v4
+
+            # setup python
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+                cache: 'pip' # Caches the pip packages to speed up the workflow
+
+            - name: Install Dependencies
+              working-directory: ${{ env.PROJECT_DIR }}
+              run:  |
+                python -m pip install --upgrade pip
+                pip install pipenv
+                pipenv install --dev
+
+            - name: Run Test
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: pipenv run test # according to dev notes
+
+    build_stage:
+        needs: [linting_stage, test_stage]
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check the Repository
+              uses: actions/checkout@v4
+
+            - name: Build Docker Image
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: |
+                docker build -t mp-backend:latest .
