@@ -41,6 +41,7 @@ jobs:
               with:
                 python-version: "3.13"
                 cache: 'pip' # Caches the pip packages to speed up the workflow
+                cache-dependency-path: ${{ env.PROJECT_DIR }}/Pipfile.lock
 
             - name: Install Dependencies
               working-directory: ${{ env.PROJECT_DIR }}
@@ -66,6 +67,7 @@ jobs:
               with:
                 python-version: "3.13"
                 cache: 'pip' # Caches the pip packages to speed up the workflow
+                cache-dependency-path: ${{ env.PROJECT_DIR }}/Pipfile.lock
 
             - name: Install Dependencies
               working-directory: ${{ env.PROJECT_DIR }}
