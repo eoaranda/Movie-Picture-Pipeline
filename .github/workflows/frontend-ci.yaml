@@ -66,6 +66,7 @@ jobs:
               with:
                 node-version: ${{env.NODE_VERSION}}
                 cache: 'npm' # Caches the node_modules folder to speed up the workflow
+                cache-dependency-path: ${{ env.PROJECT_DIR }}/package-lock.json
 
             # Log the Node.js version
             - name: Log Node.js Version
