@@ -91,6 +91,25 @@ jobs:
             - name: Check the Repository
               uses: actions/checkout@v4
 
+            # setup python
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.13"
+                cache: 'pip' # Caches the pip packages to speed up the workflow
+                cache-dependency-path: ${{ env.PROJECT_DIR }}/Pipfile.lock
+
+            - name: Install Dependencies
+              working-directory: ${{ env.PROJECT_DIR }}
+              run:  |
+                python -m pip install --upgrade pip
+                pip install pipenv
+                pipenv install --dev
+
+            - name: Run Test
+              working-directory: ${{ env.PROJECT_DIR }}
+              run: pipenv run test # according to dev notes
+
             # Configure AWS Credentials
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v3

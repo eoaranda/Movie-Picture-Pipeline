@@ -4,6 +4,8 @@ metadata:
   name: backend
   labels:
     app: backend
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "alb" # ALB annotation
 spec:
   type: LoadBalancer
   selector:
