@@ -21,7 +21,7 @@ env:
   # Define the API URL 
   REACT_APP_MOVIE_API_URL: http://localhost:5000
   # Define the cluster name 
-  EKS_CLUSTER: 'mp-eks-cluster'
+  EKS_CLUSTER: 'cluster'
   # Define the repository name
   REPOSITORY: 'mp-backend'
 

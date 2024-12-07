@@ -23,7 +23,7 @@ env:
   # Define the API URL 
   REACT_APP_MOVIE_API_URL: http://backend:80
   # Define the cluster name 
-  EKS_CLUSTER: 'mp-eks-cluster' #this has been previously created in the AWS console
+  EKS_CLUSTER: 'cluster' #this has been previously created in the AWS console
   # Define the repository name
   REPOSITORY: 'mp-frontend'
 
