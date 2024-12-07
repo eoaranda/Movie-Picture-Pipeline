@@ -21,7 +21,7 @@ env:
   # Define frontend path 
   PROJECT_DIR: 'starter/frontend' 
   # Define the API URL 
-  REACT_APP_MOVIE_API_URL: http://backend:80
+  REACT_APP_MOVIE_API_URL: http://a894449bf5aa94028b9aec9064e5e309-743010038.us-east-1.elb.amazonaws.com
   # Define the cluster name 
   EKS_CLUSTER: 'cluster' #this has been previously created in the AWS console
   # Define the repository name
